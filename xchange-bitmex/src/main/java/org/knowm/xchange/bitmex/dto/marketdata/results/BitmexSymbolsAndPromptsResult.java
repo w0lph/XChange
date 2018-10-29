@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import org.knowm.xchange.bitmex.AbstractHttpResponseAware;
 
-public class BitmexSymbolsAndPromptsResult extends AbstractHttpResponseAware {
+public class BitmexSymbolsAndPromptsResult<V> extends AbstractHttpResponseAware {
 
-  private final List<String> intervals;
-  private final List<String> symbols;
+  private final V intervals;
+  private final V symbols;
 
   /**
    * Constructor
@@ -18,26 +18,33 @@ public class BitmexSymbolsAndPromptsResult extends AbstractHttpResponseAware {
    */
   @JsonCreator
   public BitmexSymbolsAndPromptsResult(
-      @JsonProperty("intervals") List<String> intervals,
-      @JsonProperty("symbols") List<String> symbols) {
+      @JsonProperty("intervals") V intervals, @JsonProperty("symbols") V symbols) {
 
     this.intervals = intervals;
     this.symbols = symbols;
   }
 
-  public List<String> getIntervals() {
-    return intervals;
+  public boolean isSuccess() {
+
+    return symbols.toString().length() != 0;
   }
 
-  public List<String> getSymbols() {
-    return symbols;
+  public List<V> getIntervals() {
+
+    return (List<V>) intervals;
+  }
+
+  public List<V> getSymbols() {
+
+    return (List<V>) symbols;
   }
 
   @Override
   public String toString() {
-    return "BitmexSymbolsAndPromptsResult ["
-        + (intervals != null ? "intervals=" + intervals + ", " : "")
-        + (symbols != null ? "symbols=" + symbols : "")
-        + "]";
+
+    return String.format(
+        "BitmexSymbolsAndPromptsResult[%s: %s]",
+        isSuccess() ? "OK" : "error",
+        isSuccess() ? intervals.toString() + " / " + symbols.toString() : "error");
   }
 }

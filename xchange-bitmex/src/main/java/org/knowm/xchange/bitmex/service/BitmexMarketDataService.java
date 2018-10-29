@@ -2,15 +2,15 @@ package org.knowm.xchange.bitmex.service;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 import org.knowm.xchange.bitmex.BitmexAdapters;
-import org.knowm.xchange.bitmex.BitmexContract;
 import org.knowm.xchange.bitmex.BitmexExchange;
 import org.knowm.xchange.bitmex.BitmexPrompt;
-import org.knowm.xchange.bitmex.BitmexUtils;
 import org.knowm.xchange.bitmex.dto.account.BitmexTicker;
-import org.knowm.xchange.bitmex.dto.marketdata.BitmexPublicTrade;
 import org.knowm.xchange.currency.CurrencyPair;
 import org.knowm.xchange.dto.marketdata.OrderBook;
 import org.knowm.xchange.dto.marketdata.Ticker;
@@ -48,20 +48,30 @@ public class BitmexMarketDataService extends BitmexMarketDataServiceRaw
     }
 
     BitmexTicker bitmexTicker = bitmexTickers.get(0);
-    Ticker ticker =
-        new Ticker.Builder()
-            .currencyPair(currencyPair)
-            .open(bitmexTicker.getOpenValue())
-            .last(bitmexTicker.getLastPrice())
-            .bid(bitmexTicker.getBidPrice())
-            .ask(bitmexTicker.getAskPrice())
-            .high(bitmexTicker.getHighPrice())
-            .low(bitmexTicker.getLowPrice())
-            .vwap(new BigDecimal(bitmexTicker.getVwap()))
-            .volume(bitmexTicker.getVolume24h())
-            .quoteVolume(null)
-            .timestamp(bitmexTicker.getTimestamp())
-            .build();
+
+    DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
+    Ticker ticker = null;
+
+    try {
+      ticker =
+          new Ticker.Builder()
+              .currencyPair(currencyPair)
+              .open(bitmexTicker.getOpenValue())
+              .last(bitmexTicker.getLastPrice())
+              .bid(bitmexTicker.getBidPrice())
+              .ask(bitmexTicker.getAskPrice())
+              .high(bitmexTicker.getHighPrice())
+              .low(bitmexTicker.getLowPrice())
+              .vwap(new BigDecimal(bitmexTicker.getVwap()))
+              .volume(bitmexTicker.getVolume24h())
+              .quoteVolume(null)
+              .timestamp(format.parse(bitmexTicker.getTimestamp()))
+              .build();
+    } catch (ParseException e) {
+
+      return null;
+    }
 
     return ticker;
   }
@@ -80,15 +90,15 @@ public class BitmexMarketDataService extends BitmexMarketDataServiceRaw
     }
     Object[] argsToPass = Arrays.copyOfRange(args, 1, args.length);
     return BitmexAdapters.adaptOrderBook(
-        getBitmexDepth(currencyPair, prompt, argsToPass), currencyPair);
+        getBitmexDepth(BitmexAdapters.adaptCurrencyPair(currencyPair), prompt, argsToPass),
+        currencyPair);
   }
 
   @Override
   public Trades getTrades(CurrencyPair currencyPair, Object... args) throws IOException {
 
+    Long since = null;
     BitmexPrompt prompt = null;
-    Integer limit = null;
-    Long start = null;
     if (args != null && args.length > 0) {
       Object arg0 = args[0];
       if (arg0 instanceof BitmexPrompt) {
@@ -96,27 +106,10 @@ public class BitmexMarketDataService extends BitmexMarketDataServiceRaw
       } else {
         throw new ExchangeException("args[0] must be of type BitmexPrompt!");
       }
-
-      if (args.length > 1) {
-        Object arg1 = args[1];
-        if (arg1 instanceof Integer) {
-          limit = (Integer) arg1;
-        } else {
-          throw new ExchangeException("args[1] must be of type Integer!");
-        }
-      }
-      if (args.length > 2) {
-        Object arg2 = args[2];
-        if (arg2 instanceof Long) {
-          start = (Long) arg2;
-        } else {
-          throw new ExchangeException("args[2] must be of type Long!");
-        }
-      }
     }
-    BitmexContract contract = new BitmexContract(currencyPair, prompt);
-    String bitmexSymbol = BitmexUtils.translateBitmexContract(contract);
-    List<BitmexPublicTrade> trades = getBitmexTrades(bitmexSymbol, limit, start);
-    return BitmexAdapters.adaptTrades(trades, currencyPair);
+    Object[] argsToPass = Arrays.copyOfRange(args, 1, args.length);
+    // Trades bitmexTrades = getBitmexTrades(BitmexAdapters.adaptCurrencyPair(currencyPair), prompt,
+    // argsToPass);
+    return getBitmexTrades(BitmexAdapters.adaptCurrencyPair(currencyPair), prompt, argsToPass);
   }
 }

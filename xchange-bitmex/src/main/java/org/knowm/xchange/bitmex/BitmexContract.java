@@ -13,8 +13,10 @@ public class BitmexContract implements Comparable<BitmexContract>, Serializable 
   public final CurrencyPair pair;
 
   public BitmexContract(CurrencyPair pair, BitmexPrompt prompt) {
+
     this.prompt = prompt;
     this.pair = pair;
+    // TODO Auto-generated constructor stub
   }
 
   @Override

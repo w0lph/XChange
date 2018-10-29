@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -124,16 +123,16 @@ public class BitmexTicker {
   private String typ;
 
   @JsonProperty("listing")
-  private Date listing;
+  private String listing;
 
   @JsonProperty("front")
-  private Date front;
+  private String front;
 
   @JsonProperty("expiry")
-  private Date expiry;
+  private String expiry;
 
   @JsonProperty("settle")
-  private Date settle;
+  private String settle;
 
   @JsonProperty("relistInterval")
   private String relistInterval;
@@ -253,10 +252,10 @@ public class BitmexTicker {
   private String fundingPremiumSymbol;
 
   @JsonProperty("fundingTimestamp")
-  private Date fundingTimestamp;
+  private String fundingTimestamp;
 
   @JsonProperty("fundingInterval")
-  private Date fundingInterval;
+  private String fundingInterval;
 
   @JsonProperty("fundingRate")
   private BigDecimal fundingRate;
@@ -271,13 +270,13 @@ public class BitmexTicker {
   private String rebalanceInterval;
 
   @JsonProperty("openingTimestamp")
-  private Date openingTimestamp;
+  private String openingTimestamp;
 
   @JsonProperty("closingTimestamp")
-  private Date closingTimestamp;
+  private String closingTimestamp;
 
   @JsonProperty("sessionInterval")
-  private Date sessionInterval;
+  private String sessionInterval;
 
   @JsonProperty("prevClosePrice")
   private BigDecimal prevClosePrice;
@@ -397,7 +396,7 @@ public class BitmexTicker {
   private BigDecimal settledPrice;
 
   @JsonProperty("timestamp")
-  private Date timestamp;
+  private String timestamp;
 
   @JsonIgnore private Map<String, Object> additionalProperties = new HashMap<>();
 
@@ -417,19 +416,19 @@ public class BitmexTicker {
     return typ;
   }
 
-  public Date getListing() {
+  public String getListing() {
     return listing;
   }
 
-  public Date getFront() {
+  public String getFront() {
     return front;
   }
 
-  public Date getExpiry() {
+  public String getExpiry() {
     return expiry;
   }
 
-  public Date getSettle() {
+  public String getSettle() {
     return settle;
   }
 
@@ -589,11 +588,11 @@ public class BitmexTicker {
     return fundingPremiumSymbol;
   }
 
-  public Date getFundingTimestamp() {
+  public String getFundingTimestamp() {
     return fundingTimestamp;
   }
 
-  public Date getFundingInterval() {
+  public String getFundingInterval() {
     return fundingInterval;
   }
 
@@ -613,15 +612,15 @@ public class BitmexTicker {
     return rebalanceInterval;
   }
 
-  public Date getOpeningTimestamp() {
+  public String getOpeningTimestamp() {
     return openingTimestamp;
   }
 
-  public Date getClosingTimestamp() {
+  public String getClosingTimestamp() {
     return closingTimestamp;
   }
 
-  public Date getSessionInterval() {
+  public String getSessionInterval() {
     return sessionInterval;
   }
 
@@ -781,7 +780,7 @@ public class BitmexTicker {
     return settledPrice;
   }
 
-  public Date getTimestamp() {
+  public String getTimestamp() {
     return timestamp;
   }
 

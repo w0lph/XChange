@@ -27,48 +27,71 @@ public class BitmexAccountServiceRaw extends BitmexBaseService {
   }
 
   public BitmexAccount getBitmexAccountInfo() throws ExchangeException {
-    return updateRateLimit(
-        () -> bitmex.getAccount(apiKey, exchange.getNonceFactory(), signatureCreator));
+
+    try {
+      return updateRateLimit(
+          bitmex.getAccount(apiKey, exchange.getNonceFactory(), signatureCreator));
+    } catch (IOException e) {
+      throw handleError(e);
+    }
   }
 
   public BitmexWallet getBitmexWallet(Currency... ccy) throws ExchangeException {
 
-    return updateRateLimit(
-        () ->
-            bitmex.getWallet(
-                apiKey,
-                exchange.getNonceFactory(),
-                signatureCreator /*, ccy.length>0?ccy[0].getCurrencyCode():null*/));
+    try {
+      return updateRateLimit(
+          bitmex.getWallet(
+              apiKey,
+              exchange.getNonceFactory(),
+              signatureCreator /*, ccy.length>0?ccy[0].getCurrencyCode():null*/));
+    } catch (IOException e) {
+      throw handleError(e);
+    }
   }
 
   public List<BitmexWalletTransaction> getBitmexWalletHistory(Currency ccy)
       throws ExchangeException {
 
-    return updateRateLimit(
-        () ->
-            bitmex.getWalletHistory(
-                apiKey, exchange.getNonceFactory(), signatureCreator, ccy.getCurrencyCode()));
+    try {
+      return updateRateLimit(
+          bitmex.getWalletHistory(
+              apiKey, exchange.getNonceFactory(), signatureCreator, ccy.getCurrencyCode()));
+    } catch (IOException e) {
+      throw handleError(e);
+    }
   }
 
   public List<BitmexWalletTransaction> getBitmexWalletSummary(Currency ccy)
       throws ExchangeException {
 
-    return updateRateLimit(
-        () ->
-            bitmex.getWalletSummary(
-                apiKey, exchange.getNonceFactory(), signatureCreator, ccy.getCurrencyCode()));
+    try {
+      return updateRateLimit(
+          bitmex.getWalletSummary(
+              apiKey, exchange.getNonceFactory(), signatureCreator, ccy.getCurrencyCode()));
+    } catch (IOException e) {
+      throw handleError(e);
+    }
   }
 
   public BitmexMarginAccount getBitmexMarginAccountStatus(Currency ccy) throws ExchangeException {
-    return updateRateLimit(
-        () ->
-            bitmex.getMarginAccountStatus(
-                apiKey, exchange.getNonceFactory(), signatureCreator, ccy.getCurrencyCode()));
+
+    try {
+      return updateRateLimit(
+          bitmex.getMarginAccountStatus(
+              apiKey, exchange.getNonceFactory(), signatureCreator, ccy.getCurrencyCode()));
+    } catch (IOException e) {
+      throw handleError(e);
+    }
   }
 
   public List<BitmexMarginAccount> getBitmexMarginAccountsStatus() throws ExchangeException {
-    return updateRateLimit(
-        () -> bitmex.getMarginAccountsStatus(apiKey, exchange.getNonceFactory(), signatureCreator));
+
+    try {
+      return updateRateLimit(
+          bitmex.getMarginAccountsStatus(apiKey, exchange.getNonceFactory(), signatureCreator));
+    } catch (IOException e) {
+      throw handleError(e);
+    }
   }
 
   public String requestDepositAddress(String currency) throws ExchangeException {
@@ -82,16 +105,14 @@ public class BitmexAccountServiceRaw extends BitmexBaseService {
 
   public String withdrawFunds(String currency, BigDecimal amount, String address)
       throws ExchangeException {
-    BitmexWalletTransaction transaction =
-        updateRateLimit(
-            () ->
-                bitmex.withdrawFunds(
-                    apiKey,
-                    exchange.getNonceFactory(),
-                    signatureCreator,
-                    currency,
-                    amount,
-                    address));
-    return transaction.getTransactID();
+    try {
+      BitmexWalletTransaction transaction =
+          updateRateLimit(
+              bitmex.withdrawFunds(
+                  apiKey, exchange.getNonceFactory(), signatureCreator, currency, amount, address));
+      return transaction.getTransactID();
+    } catch (IOException e) {
+      throw handleError(e);
+    }
   }
 }

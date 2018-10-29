@@ -5,8 +5,7 @@ import java.util.Map;
 import si.mazi.rescu.HttpResponseAware;
 
 /** @author Nikita Belenkiy on 02/07/2018. */
-public abstract class AbstractHttpResponseAware implements HttpResponseAware {
-
+public class AbstractHttpResponseAware implements HttpResponseAware {
   private Map<String, List<String>> headers;
 
   @Override

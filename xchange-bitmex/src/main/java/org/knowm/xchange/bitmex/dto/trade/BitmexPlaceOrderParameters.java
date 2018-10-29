@@ -1,7 +1,6 @@
 package org.knowm.xchange.bitmex.dto.trade;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -246,15 +245,6 @@ public class BitmexPlaceOrderParameters {
     public Builder setExecutionInstructions(
         @Nullable List<BitmexExecutionInstruction> executionInstructions) {
       this.executionInstructions = executionInstructions;
-      return this;
-    }
-
-    @Nonnull
-    public Builder addExecutionInstruction(@Nullable BitmexExecutionInstruction execInst) {
-      if (this.executionInstructions == null) {
-        this.executionInstructions = new ArrayList<>();
-      }
-      this.executionInstructions.add(execInst);
       return this;
     }
 
